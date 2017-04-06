@@ -114,11 +114,10 @@
         android:textAlignment="center"
         android:layout_alignBaseline="@+id/message_text_view"
         android:layout_alignBottom="@+id/message_text_view"
-        android:layout_alignRight="@+id/timeToNumb"
-        android:layout_alignEnd="@+id/timeToNumb"
-        android:layout_toEndOf="@+id/min_max_text"
-        android:layout_alignLeft="@+id/start_button"
-        android:layout_alignStart="@+id/start_button" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/message_text_view"
+        android:layout_toEndOf="@+id/message_text_view" />
 
     <Button
         android:id="@+id/start_button"
@@ -128,6 +127,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="82dp"
         android:elevation="0dp"
+        android:onClick="startCountdown"
         android:text="Start Countdown"
         android:textAlignment="center"
         android:textSize="18sp" />
