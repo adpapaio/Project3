@@ -4,6 +4,7 @@
 
 package papaioannou.aris.countdownproject3;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,13 +17,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class MainScreen extends AppCompatActivity {
 
-    int countdownSeconds;
+    public int countdownSeconds=5;
+    int hfLength = 7; //Default value will be to add all highest values to notification
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class MainScreen extends AppCompatActivity {
 
 
     //Get the seconds from the textbox
-    private int getTheSeconds(EditText countdownBox)
+    public int getTheSeconds(EditText countdownBox)
     {
         int seconds;
 
@@ -92,7 +93,7 @@ public class MainScreen extends AppCompatActivity {
     //Make sure the seconds is not over 120 or less than 5
     //Will also make the seconds a multiple of 5
     //is passed in seconds and the box that the user entered seconds in
-    private int validateNumber(int seconds, EditText countdownBox)
+    public int validateNumber(int seconds, EditText countdownBox)
     {
         if(seconds > 120) //is seconds over 120
         {
@@ -116,7 +117,7 @@ public class MainScreen extends AppCompatActivity {
 
     //fills the spinner with the Highest Notification values
     //is passed in seconds
-    private void populateSpinner(int seconds)
+    public void populateSpinner(int seconds)
     {
         ArrayList<String> highNotif = new ArrayList<String>(); //Array list for Highest Notifications
         Spinner hnSpinner = (Spinner) findViewById(R.id.HighestSpinner); //Setting the Highest Notification spinner
@@ -158,6 +159,7 @@ public class MainScreen extends AppCompatActivity {
         }
 
 
+
         for (int i = 0; i < hfLength; i++) //Populate the spinner based on how many notfications it needs
         {
             highNotif.add(" " + hnVals[i] + " Second(s)"); //add it to the spinner
@@ -175,23 +177,33 @@ public class MainScreen extends AppCompatActivity {
     {
         TextView messageBox = (TextView) findViewById(R.id.message_text_box);
         EditText countdownBox = (EditText) findViewById(R.id.timeToNumb); //Box they set Time to Countdown
+        Spinner spinner = (Spinner) findViewById(R.id.HighestSpinner);
 
         int seconds = countdownSeconds;
 
-        if(messageBox.getText().toString().length() != 0)
+        if(messageBox.getText().toString().length() != 0 && countdownBox.getText().toString().length() != 0)
         {
-            Toast.makeText(this, "Countdown for "+ messageBox.getText().toString() +" has started", Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, seconds+ "", Toast.LENGTH_SHORT).show();
+           /* Toast.makeText(this, "Countdown for "+ messageBox.getText().toString() +" has started", Toast.LENGTH_SHORT).show();*/
+            Toast.makeText(this, "Countdown has been started", Toast.LENGTH_SHORT).show();
 
+            Intent serTent = new Intent(getBaseContext(), TimingService.class);
+            serTent.putExtra("message", messageBox.getText().toString());
+            serTent.putExtra("high", spinner.getSelectedItemPosition());
+            serTent.putExtra("secs",seconds);
+            startService(serTent);
+
+        }
+        else if (countdownBox.getText().toString().length() == 0)
+        {
+            Toast.makeText(this, "Please check all text fields", Toast.LENGTH_SHORT).show();
+            countdownBox.setHintTextColor(Color.RED);
         }
         else
         {
-            Toast.makeText(this, "Please Enter a Message", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please check all text fields", Toast.LENGTH_SHORT).show();
             messageBox.setHint("Enter Message Here");
             messageBox.setHintTextColor(Color.RED);
         }
 
-
     }
-
 }
